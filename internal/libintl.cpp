@@ -66,7 +66,7 @@ libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePat
 
 		FILE* moFile = NULL;
 		CloseFileHandleGuard closeFileHandleGuard(moFile);
-		moFile = fopen(moFilePath, "r");
+		moFile = fopen(moFilePath, "rb");
 		if (!moFile)
 		{
 			return LIBINTL_LITE_BOOL_FALSE;
