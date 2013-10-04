@@ -205,9 +205,9 @@ static bool loadMoFileStringsToArray(FILE* moFile,
 		const char* stringsCharsArrayIter = stringCharsArray;
 		for (uint32_t i = 0; i < numberOfStrings; i++)
 		{
-			const char* currentStrEndIter = stringsCharsArrayIter + stringsLengthsArray[i] + 1;
+			const char* currentStrEndIter = stringsCharsArrayIter + stringsLengthsArray[i];
 			outStringsFromMoFileArray[i] = std::string(stringsCharsArrayIter, currentStrEndIter);
-			stringsCharsArrayIter = currentStrEndIter;
+			stringsCharsArrayIter = currentStrEndIter + 1 /* skip the NULL char at the end of the string */ ;
 		}
 	}
 
