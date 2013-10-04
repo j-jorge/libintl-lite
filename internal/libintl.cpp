@@ -50,9 +50,10 @@ using namespace libintllite::internal;
 static char* currentDefaultDomain = NULL;
 static map<char*, MessageCatalog*> loadedMessageCatalogPtrsByDomain;
 
-libintl_lite_bool_t loadMessageCatalog(const char* moFilePath, const char* domain)
+libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePath)
 {
-	try {
+	try
+	{
 		if (sizeof(uint32_t) != 4)
 		{
 			return LIBINTL_LITE_BOOL_FALSE;
