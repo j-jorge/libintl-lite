@@ -74,7 +74,8 @@ public:
 		const std::string* origStrPtr = std::lower_bound(this->sortedOrigStringsArray,
 				lastSortedOrigStringEndIter,
 				orig);
-		if (!origStrPtr || (origStrPtr == lastSortedOrigStringEndIter))
+
+		if (!origStrPtr || (origStrPtr == lastSortedOrigStringEndIter) || (*origStrPtr != orig) )
 		{
 			return NULL;
 		}
