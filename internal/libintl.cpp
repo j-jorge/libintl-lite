@@ -29,7 +29,6 @@ DEALINGS IN THE SOFTWARE.
 #include <map>
 #include <string>
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -52,6 +51,25 @@ static map<char*, MessageCatalog*> loadedMessageCatalogPtrsByDomain;
 
 libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePath)
 {
+	if (!moFilePath || !domain)
+	{
+		return LIBINTL_LITE_BOOL_FALSE;
+	}
+
+	FILE* moFile = NULL;
+	CloseFileHandleGuard closeFileHandleGuard(moFile);
+	moFile = fopen(moFilePath, "rb");
+	
+	if (!moFile)
+	{
+		return LIBINTL_LITE_BOOL_FALSE;
+	}
+
+	return loadMessageCatalogFile(domain, moFile);
+}
+
+libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile)
+{
 	try
 	{
 		if (sizeof(uint32_t) != 4)
@@ -59,15 +77,7 @@ libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePat
 			return LIBINTL_LITE_BOOL_FALSE;
 		}
 
-		if (!moFilePath || !domain)
-		{
-			return LIBINTL_LITE_BOOL_FALSE;
-		}
-
-		FILE* moFile = NULL;
-		CloseFileHandleGuard closeFileHandleGuard(moFile);
-		moFile = fopen(moFilePath, "rb");
-		if (!moFile)
+		if (!moFile || !domain)
 		{
 			return LIBINTL_LITE_BOOL_FALSE;
 		}
@@ -141,6 +151,17 @@ libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePat
 	{
 		return LIBINTL_LITE_BOOL_FALSE;
 	}
+}
+
+libintl_lite_bool_t bindtextdomain(const char* domain, const char* moFilePath)
+{
+	loadMessageCatalog( domain, moFilePath );
+}
+
+libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* moFilePath)
+{
+	// not implemented yet
+	return LIBINTL_LITE_BOOL_FALSE;
 }
 
 void closeLoadedMessageCatalog(const char* domain)

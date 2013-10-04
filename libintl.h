@@ -27,6 +27,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef LIBINTL_HPP_
 #define LIBINTL_HPP_
 
+#include <stdio.h>
+
 #define LIBINTL_LITE_API
 #if (defined(WIN32) || defined(WINCE)) && defined(LIBINTL_LITE_WIN32_SHARED)
 	#undef LIBINTL_LITE_API
@@ -57,6 +59,11 @@ typedef int libintl_lite_bool_t;
  * Pay attention to the thread safety remarks of the gettext() function!
  */
 LIBINTL_LITE_API libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePath);
+LIBINTL_LITE_API libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile);
+
+LIBINTL_LITE_API libintl_lite_bool_t bindtextdomain(const char* domain, const char* moFilePath);
+
+LIBINTL_LITE_API libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* moFilePath);
 
 /**
  * Closes a message catalog for the specified domain and releases its obtained resources.
