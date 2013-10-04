@@ -176,7 +176,8 @@ static bool loadMoFileStringsToArray(FILE* moFile,
 			{
 				firstStringOffset = currentStringOffset;
 			}
-			else if (i == (numberOfStrings - 1))
+			
+			if (i == (numberOfStrings - 1))
 			{
 				lastStringOffset = currentStringOffset;
 			}
