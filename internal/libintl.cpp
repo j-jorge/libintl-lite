@@ -50,17 +50,17 @@ using namespace libintllite::internal;
 static char* currentDefaultDomain = NULL;
 static map<char*, MessageCatalog*> loadedMessageCatalogPtrsByDomain;
 
-int loadMessageCatalog(const char* moFilePath, const char* domain)
+libintl_lite_bool_t loadMessageCatalog(const char* moFilePath, const char* domain)
 {
 	try {
 		if (sizeof(uint32_t) != 4)
 		{
-			return (int) false;
+			return LIBINTL_LITE_BOOL_FALSE;
 		}
 
 		if (!moFilePath || !domain)
 		{
-			return false;
+			return LIBINTL_LITE_BOOL_FALSE;
 		}
 
 		FILE* moFile = NULL;
@@ -68,16 +68,16 @@ int loadMessageCatalog(const char* moFilePath, const char* domain)
 		moFile = fopen(moFilePath, "r");
 		if (!moFile)
 		{
-			return false;
+			return LIBINTL_LITE_BOOL_FALSE;
 		}
 
 		uint32_t magicNumber;
-		if (!readUIn32FromFile(moFile, false, magicNumber)) return false;
-		if ((magicNumber != 0x950412de) && (magicNumber != 0xde120495)) return false;
+		if (!readUIn32FromFile(moFile, false, magicNumber)) return LIBINTL_LITE_BOOL_FALSE;
+		if ((magicNumber != 0x950412de) && (magicNumber != 0xde120495)) return LIBINTL_LITE_BOOL_FALSE;
 
 		uint32_t fileFormatRevision;
-		if (!readUIn32FromFile(moFile, false, fileFormatRevision)) return false;
-		if (fileFormatRevision != 0) return false;
+		if (!readUIn32FromFile(moFile, false, fileFormatRevision)) return LIBINTL_LITE_BOOL_FALSE;
+		if (fileFormatRevision != 0) return LIBINTL_LITE_BOOL_FALSE;
 
 		bool needsBeToLeConversion = isBigEndian();
 
@@ -85,63 +85,60 @@ int loadMessageCatalog(const char* moFilePath, const char* domain)
 		if (!readUIn32FromFile(moFile, needsBeToLeConversion, numberOfStrings)) return false;
 		if (numberOfStrings == 0)
 		{
-			return true;
+			return LIBINTL_LITE_BOOL_TRUE;
 		}
 
 		uint32_t offsetOrigTable;
-		if (!readUIn32FromFile(moFile, needsBeToLeConversion, offsetOrigTable)) return false;
+		if (!readUIn32FromFile(moFile, needsBeToLeConversion, offsetOrigTable)) return LIBINTL_LITE_BOOL_FALSE;
 
 		uint32_t offsetTransTable;
-		if (!readUIn32FromFile(moFile, needsBeToLeConversion, offsetTransTable)) return false;
+		if (!readUIn32FromFile(moFile, needsBeToLeConversion, offsetTransTable)) return LIBINTL_LITE_BOOL_FALSE;
 
 		string* sortedOrigStringsArray = NULL;
 		ArrayGurard<string> sortedOrigStringsArrayGuard(sortedOrigStringsArray);
 		sortedOrigStringsArray = new string[numberOfStrings];
 		if (!sortedOrigStringsArray)
 		{
-			return false;
+			return LIBINTL_LITE_BOOL_FALSE;
 		}
 
 		if (!loadMoFileStringsToArray(moFile,
 				numberOfStrings,
 				offsetOrigTable,
 				needsBeToLeConversion,
-				sortedOrigStringsArray)) return false;
+				sortedOrigStringsArray)) return LIBINTL_LITE_BOOL_FALSE;
 
 		string* translatedStringsArray = NULL;
 		ArrayGurard<string> translatedStringsArrayGuard(translatedStringsArray);
 		translatedStringsArray = new string[numberOfStrings];
 		if (!translatedStringsArray)
 		{
-			return false;
+			return LIBINTL_LITE_BOOL_FALSE;
 		}
 
 		if (!loadMoFileStringsToArray(moFile,
 				numberOfStrings,
 				offsetTransTable,
 				needsBeToLeConversion,
-				translatedStringsArray)) return false;
+				translatedStringsArray)) return LIBINTL_LITE_BOOL_FALSE;
 
 		MessageCatalog* newMessageCatalogPtr = new MessageCatalog(numberOfStrings,
 				sortedOrigStringsArray,
 				translatedStringsArray);
-		if (!newMessageCatalogPtr)
-		{
-			return false;
-		}
+		if (!newMessageCatalogPtr) return LIBINTL_LITE_BOOL_FALSE;
 		sortedOrigStringsArrayGuard.release();
 		translatedStringsArrayGuard.release();
 
 		char* domainDup = strdup(domain);
-		if (!domainDup) return false;
+		if (!domainDup) return LIBINTL_LITE_BOOL_FALSE;
 		closeLoadedMessageCatalog(domain);
 		loadedMessageCatalogPtrsByDomain[domainDup] = newMessageCatalogPtr;
 
-		return true;
+		return LIBINTL_LITE_BOOL_TRUE;
 	}
 	catch (...)
 	{
-		return false;
+		return LIBINTL_LITE_BOOL_FALSE;
 	}
 }
 

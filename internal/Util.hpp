@@ -44,7 +44,7 @@ namespace internal
 static inline bool isBigEndian()
 {
 	uint32_t checkNumber = 0x1100;
-	return *reinterpret_cast<const char*>(&checkNumber);
+	return (*reinterpret_cast<const char*>(&checkNumber) != 0);
 }
 
 static inline uint32_t swapUInt32Bytes(uint32_t number)
@@ -52,7 +52,7 @@ static inline uint32_t swapUInt32Bytes(uint32_t number)
 	const char* numberAsCharArray = reinterpret_cast<const char*>(&number);
 
 	uint32_t swappedNumber;
-	char* swappedNumberAsCharArray = reinterpret_cast<char*>(swappedNumber);
+	char* swappedNumberAsCharArray = reinterpret_cast<char*>(&swappedNumber);
 	swappedNumberAsCharArray[0] = numberAsCharArray[3];
 	swappedNumberAsCharArray[1] = numberAsCharArray[2];
 	swappedNumberAsCharArray[2] = numberAsCharArray[1];
