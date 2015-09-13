@@ -155,7 +155,7 @@ libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile)
 
 libintl_lite_bool_t bindtextdomain(const char* domain, const char* moFilePath)
 {
-	loadMessageCatalog( domain, moFilePath );
+	return loadMessageCatalog( domain, moFilePath );
 }
 
 libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* moFilePath)
