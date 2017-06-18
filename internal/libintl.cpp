@@ -153,12 +153,25 @@ libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile)
 	}
 }
 
-libintl_lite_bool_t bindtextdomain(const char* domain, const char* moFilePath)
+libintl_lite_bool_t bindtextdomain(const char* domain, const char* dirname)
 {
-	return loadMessageCatalog( domain, moFilePath );
+	char moFilePath[1024];
+	char *lang;
+
+	lang = getenv ("LANGUAGE");
+	if (lang == NULL)
+	{
+		return LIBINTL_LITE_BOOL_FALSE;
+	}
+
+	memset(moFilePath, 0, 1024);
+
+	snprintf(moFilePath, 1023, "%s/%s/LC_MESSAGES/%s.mo", dirname, lang, domain);
+
+	return loadMessageCatalog(domain, moFilePath);
 }
 
-libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* moFilePath)
+libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* codeset)
 {
 	// not implemented yet
 	return LIBINTL_LITE_BOOL_FALSE;
