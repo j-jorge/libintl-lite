@@ -61,9 +61,9 @@ typedef int libintl_lite_bool_t;
 LIBINTL_LITE_API libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePath);
 LIBINTL_LITE_API libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile);
 
-LIBINTL_LITE_API libintl_lite_bool_t bindtextdomain(const char* domain, const char* moFilePath);
+LIBINTL_LITE_API libintl_lite_bool_t bindtextdomain(const char* domain, const char* dirname);
 
-LIBINTL_LITE_API libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* moFilePath);
+LIBINTL_LITE_API libintl_lite_bool_t bind_textdomain_codeset(const char* domain, const char* codeset);
 
 /**
  * Closes a message catalog for the specified domain and releases its obtained resources.
