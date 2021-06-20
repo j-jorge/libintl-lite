@@ -11,13 +11,15 @@ Build with Android NDK and cmake
 Build script is configured via environment variables, but you can always override them in command line:
 
 ```bash
-ANDROID_SDK_ROOT="<sdk>" \
-ANDROID_NDK_ROOT="<ndk>" \
-BUILD_ARCH="<arch>" \
+ANDROID_SDK_ROOT="/path/to/android/sdk" \
+ANDROID_NDK_ROOT="/path/to/android/ndk" \
+ANDROID_SDK_CMAKE_VERSION="3.18.1" \
+ANDROID_PLATFORM="21" \
+ANDROID_ABI="armeabi-v7a,arm64-v8a" \
 ./build-android-cmake.sh
 ```
 
-Where `ANDROID_SDK_ROOT` is path to Android SDK, it should contain proper version of cmake. `ANDROID_NDK_ROOT` is path to Android NDK, can be `$ANDROID_SDK_ROOT/ndk/<version>`. `BUILD_ARCH` is comma separated list, eg `armebi-v7a,arm64-v8a,x86,x86_64`.
+Where `ANDROID_SDK_ROOT` is path to Android SDK, it should contain proper version of cmake. `ANDROID_NDK_ROOT` is path to Android NDK, can be `$ANDROID_SDK_ROOT/ndk/<version>`. `ANDROID_ABI` is comma separated list, eg `armeabi-v7a,arm64-v8a,x86,x86_64`.
 
 Build artifacts are stored in `out/libintl-lite/<arch>`. You can use them via `find_package(LibIntl)` as normal cmake packages.
 
