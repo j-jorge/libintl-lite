@@ -5,6 +5,22 @@ libintl-lite is a simple (but less powerful) GNU gettext libintl replacement ori
 
 The library does not depends upon any library except the standard C++ library and the STL, thus making it well suited for platforms like Android.
 
+Build with Android NDK and cmake
+===============
+
+Build script is configured via environment variables, but you can always override them in command line:
+
+```bash
+ANDROID_SDK_ROOT="<sdk>" \
+ANDROID_NDK_ROOT="<ndk>" \
+BUILD_ARCH="<arch>" \
+./build-android-cmake.sh
+```
+
+Where `ANDROID_SDK_ROOT` is path to Android SDK, it should contain proper version of cmake. `ANDROID_NDK_ROOT` is path to Android NDK, can be `$ANDROID_SDK_ROOT/ndk/<version>`. `BUILD_ARCH` is comma separated list, eg `armebi-v7a,arm64-v8a,x86,x86_64`.
+
+Build artifacts are stored in `out/libintl-lite/<arch>`. You can use them via `find_package(LibIntl)` as normal cmake packages.
+
 Where to get help?
 ===============
 
