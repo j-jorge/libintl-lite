@@ -3,7 +3,7 @@
 CMAKE=""
 
 build_libintl() {
-    echo ">>> Building fmt for $1"
+    echo ">>> Building libintl for $1"
     "$CMAKE" -B build \
         -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT"/build/cmake/android.toolchain.cmake \
         -DANDROID_ABI="$1" \
