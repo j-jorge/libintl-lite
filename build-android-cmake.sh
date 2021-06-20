@@ -13,6 +13,7 @@ build_libintl() {
         .
     "$CMAKE" --build build
     "$CMAKE" --build build --target install
+    rm -rf ./build
 }
 
 if [ -z "${ANDROID_SDK_ROOT}" ]; then
