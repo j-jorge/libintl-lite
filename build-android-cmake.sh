@@ -8,6 +8,7 @@ build_libintl() {
         -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT"/build/cmake/android.toolchain.cmake \
         -DANDROID_ABI="$1" \
         -DANDROID_PLATFORM="$ANDROID_PLATFORM" \
+        -DANDROID_STL=c++_shared \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=out/libintl-lite/"$1" \
         .
