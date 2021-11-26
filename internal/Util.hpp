@@ -27,6 +27,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef LIBINTL_INTERNAL_UTIL_HPP_
 #define LIBINTL_INTERNAL_UTIL_HPP_
 
+#include <vector>
+
 #if defined(WIN32) || defined(WINCE)
 typedef unsigned int uint32_t;
 #else
@@ -212,6 +214,21 @@ static bool loadMoFileStringsToArray(FILE* moFile,
 	}
 
 	return true;
+}
+
+static std::vector<std::string> buildMoFilePaths(const char *domain) {
+	std::string languages = getenv("LANGUAGE");
+	std::vector<std::string> paths {""};
+	std::string slash = "/";
+	size_t pos = 0;
+	do {
+		pos = languages.find(":");
+		std::string lang = languages.substr(0, pos);
+		if (lang.empty()) break;
+		paths.emplace_back(slash + lang + "/LC_MESSAGES/" + domain + ".mo");
+		languages.erase(0, pos + 1);
+	} while (pos != std::string::npos);
+	return paths;
 }
 
 } // namespace internal
