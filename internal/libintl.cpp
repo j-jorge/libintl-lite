@@ -50,9 +50,9 @@ using namespace libintllite::internal;
 static char* currentDefaultDomain = NULL;
 static map<char*, MessageCatalog*> loadedMessageCatalogPtrsByDomain;
 
-libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePath)
+libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilesRoot)
 {
-	if (!moFilePath || !domain)
+	if (!moFilesRoot || !domain)
 	{
 		return LIBINTL_LITE_BOOL_FALSE;
 	}
@@ -60,10 +60,9 @@ libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilePat
 	FILE* moFile = NULL;
 	CloseFileHandleGuard closeFileHandleGuard(moFile);
 
-	string moFilePathStr = moFilePath;
 	for (const string &path : buildMoFilePaths(domain))
 	{
-		string fullPath = moFilePathStr + path;
+		string fullPath = moFilesRoot + path;
 		error_code error;
 		if (filesystem::is_regular_file(fullPath, error))
 		{
