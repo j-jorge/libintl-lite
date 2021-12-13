@@ -216,18 +216,25 @@ static bool loadMoFileStringsToArray(FILE* moFile,
 	return true;
 }
 
-static std::vector<std::string> buildMoFilePaths(const char *domain) {
+static std::vector<std::string> buildMoFilePaths(const char *domain)
+{
 	std::string languages = getenv("LANGUAGE");
 	std::vector<std::string> paths {""};
 	std::string slash = "/";
+	const size_t length = languages.size();
 	size_t pos = 0;
-	do {
-		pos = languages.find(":");
-		std::string lang = languages.substr(0, pos);
-		if (lang.empty()) break;
+	size_t colon = 0;
+	while (pos <= length)
+	{
+		colon = languages.find(':', pos);
+		if (colon == std::string::npos)
+		{
+			colon = length;
+		}
+		std::string lang = languages.substr(pos, colon - pos);
 		paths.emplace_back(slash + lang + "/LC_MESSAGES/" + domain + ".mo");
-		languages.erase(0, pos + 1);
-	} while (pos != std::string::npos);
+		pos = colon + 1;
+	}
 	return paths;
 }
 
