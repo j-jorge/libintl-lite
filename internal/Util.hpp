@@ -224,16 +224,22 @@ static std::vector<std::string> buildMoFilePaths(const char *domain)
 	const size_t length = languages.size();
 	size_t pos = 0;
 	size_t colon = 0;
-	while (pos <= length)
+	while (pos != length)
 	{
 		colon = languages.find(':', pos);
+		std::string lang = languages.substr(pos, colon - pos);
+		if (!lang.empty())
+		{
+			paths.emplace_back(slash + lang + "/LC_MESSAGES/" + domain + ".mo");
+		}
 		if (colon == std::string::npos)
 		{
-			colon = length;
+			break;
 		}
-		std::string lang = languages.substr(pos, colon - pos);
-		paths.emplace_back(slash + lang + "/LC_MESSAGES/" + domain + ".mo");
-		pos = colon + 1;
+		else
+		{
+			pos = colon + 1;
+		}
 	}
 	return paths;
 }
