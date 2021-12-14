@@ -28,7 +28,6 @@ DEALINGS IN THE SOFTWARE.
 
 #include <map>
 #include <string>
-#include <filesystem>
 
 #include <stdlib.h>
 #include <string.h>
@@ -63,20 +62,14 @@ libintl_lite_bool_t loadMessageCatalog(const char* domain, const char* moFilesRo
 	for (const string &path : buildMoFilePaths(domain))
 	{
 		string fullPath = moFilesRoot + path;
-		error_code error;
-		if (filesystem::is_regular_file(fullPath, error))
+		moFile = fopen(fullPath.c_str(), "rb");
+		if (loadMessageCatalogFile(domain, moFile) == LIBINTL_LITE_BOOL_TRUE)
 		{
-			moFile = fopen(fullPath.c_str(), "rb");
-			if (moFile) break;
+			return LIBINTL_LITE_BOOL_TRUE;
 		}
 	}
 
-	if (!moFile)
-	{
-		return LIBINTL_LITE_BOOL_FALSE;
-	}
-
-	return loadMessageCatalogFile(domain, moFile);
+	return LIBINTL_LITE_BOOL_FALSE;
 }
 
 libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile)

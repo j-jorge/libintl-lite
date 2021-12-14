@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(LibIntl VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 17)
-
 include(GNUInstallDirs)
 
 add_library(intl STATIC internal/libintl.cpp)
