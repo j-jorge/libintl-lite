@@ -9,6 +9,7 @@ target_include_directories(intl PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 set_target_properties(intl PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/libintl.h)
+target_compile_features(intl PRIVATE cxx_std_11)
 
 install(TARGETS intl
         EXPORT LibIntlTargets
