@@ -218,7 +218,8 @@ static bool loadMoFileStringsToArray(FILE* moFile,
 
 static std::vector<std::string> buildMoFilePaths(const char *domain)
 {
-	std::string languages = getenv("LANGUAGE");
+	const char *pLanguage = getenv("LANGUAGE");
+	std::string languages = pLanguage ? pLanguage : "";
 	std::vector<std::string> paths {""};
 	std::string slash = "/";
 	const size_t length = languages.size();
