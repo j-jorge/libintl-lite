@@ -2,8 +2,13 @@
 
 include("${CMAKE_CURRENT_LIST_DIR}/LibIntlTargets.cmake")
 
-set_and_check(LibIntl_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/include")
-set_and_check(LibIntl_LIBRARY "${PACKAGE_PREFIX_DIR}/lib/libintl.a")
-add_library(LibIntl::LibIntl ALIAS intl)
+set_and_check(LibIntl_INCLUDE_DIR "@PACKAGE_LIBINTL_INCLUDE_INSTALL_DIR@")
+set(LibIntl_INCLUDE_DIRS "${LibIntl_INCLUDE_DIR}")
+set(LibIntl_LIBRARIES LibIntl::intl)
+set(LibIntl_LIBRARY LibIntl::intl)
+
+if(NOT TARGET LibIntl::LibIntl AND TARGET LibIntl::intl)
+    add_library(LibIntl::LibIntl ALIAS LibIntl::intl)
+endif()
 
 check_required_components(LibIntl)
