@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
-project(LibIntl VERSION 1.0)
+project(LibIntl VERSION 1.1)
 
 include(GNUInstallDirs)
 
