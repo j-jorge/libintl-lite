@@ -97,11 +97,17 @@ LIBINTL_LITE_API const char* textdomain(const char* domain);
  * closeLoadedMessageCatalog() is called for the used domain afterwards!
  * Does not perform any character set conversion!
  */
+#ifdef __GNUC__
+__attribute__((__format_arg__(1)))
+#endif
 LIBINTL_LITE_API const char* gettext(const char* origStr);
 
 /**
  * Works like the gettext() function, but uses the message catalog for a specified domain.
  */
+#ifdef __GNUC__
+__attribute__((__format_arg__(2)))
+#endif
 LIBINTL_LITE_API const char* dgettext(const char* domain, const char* origStr);
 
 /**
@@ -110,12 +116,26 @@ LIBINTL_LITE_API const char* dgettext(const char* domain, const char* origStr);
  * Always returns the suitable singular string, if n == 1, and the plural string
  * otherwise, regardless of the language.
  */
+#ifdef __GNUC__
+__attribute__((__format_arg__(1), __format_arg__(2)))
+#endif
 LIBINTL_LITE_API const char* ngettext(const char* origStr, const char* origStrPlural, unsigned long n);
 
 /**
  * Works like the ngettext() function, but uses the message catalog for a specified domain.
  */
+#ifdef __GNUC__
+__attribute__((__format_arg__(2), __format_arg__(3)))
+#endif
 LIBINTL_LITE_API const char* dngettext(const char* domain, const char* origStr, const char* origStrPlural, unsigned long n);
+
+/**
+ * Works like the dgettext() function. Currently the category is ignored.
+ */
+#ifdef __GNUC__
+__attribute__((__format_arg__(2)))
+#endif
+LIBINTL_LITE_API const char* dcgettext(const char* domain, const char* origStr, int category);
 
 #ifdef __cplusplus
 } // extern "C"
