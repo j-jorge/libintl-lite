@@ -294,3 +294,7 @@ const char* dngettext(const char* domain, const char* origStr, const char* origS
 		return dgettext(domain, origStrPlural);
 	}
 }
+
+const char* dcgettext(const char* domain, const char* origStr, int category) {
+	return dgettext(domain, origStr);
+}
