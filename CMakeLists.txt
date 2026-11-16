@@ -4,6 +4,7 @@ project(LibIntl VERSION 1.1)
 include(GNUInstallDirs)
 
 set(BUILD_SHARED_LIBS TRUE CACHE BOOL "If enabled, shared libs will be built by default, otherwise static libs")
+option(LIBINTL_LITE_BUILD_TESTS "Build the tests, this needs msgfmt from GNU gettext" OFF)
 
 add_library(intl internal/libintl.cpp)
 target_include_directories(intl PUBLIC
@@ -52,3 +53,8 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/LibIntlConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/LibIntlConfigVersion.cmake"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/LibIntl"
 )
+
+if(LIBINTL_LITE_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

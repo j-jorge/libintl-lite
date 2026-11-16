@@ -22,3 +22,10 @@ jobs:
         run: |
           cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
           cmake --build build
+
+      - name: Test
+        if: runner.os == 'Linux'
+        run: |
+          cmake -B build-tests -G Ninja -DCMAKE_BUILD_TYPE=Debug -DLIBINTL_LITE_BUILD_TESTS=ON
+          cmake --build build-tests
+          ctest --test-dir build-tests --output-on-failure

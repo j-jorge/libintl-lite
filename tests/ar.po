@@ -1,0 +1,13 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+msgid "%1 file"
+msgid_plural "%1 files"
+msgstr[0] "zero"
+msgstr[1] "one"
+msgstr[2] "two"
+msgstr[3] "few"
+msgstr[4] "many"
+msgstr[5] "other"

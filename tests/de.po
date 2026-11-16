@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "%1 file"
+msgid_plural "%1 files"
+msgstr[0] "%1 Datei"
+msgstr[1] "%1 Dateien"
+
+msgid "%1 file found"
+msgstr "%1 Datei gefunden"
+
+msgctxt "storage"
+msgid "One folder"
+msgid_plural "%1 folders"
+msgstr[0] "Ein Ordner"
+msgstr[1] "%1 Ordner"
+
+msgid "Open"
+msgstr "Öffnen"
