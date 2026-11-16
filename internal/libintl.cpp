@@ -123,6 +123,18 @@ libintl_lite_bool_t loadMessageCatalogFile(const char* domain, FILE* moFile)
 				needsBeToLeConversion,
 				sortedOrigStringsArray)) return LIBINTL_LITE_BOOL_FALSE;
 
+		// For messages with plural forms the original string contains the singular and the plural
+		// form separated by a NUL character. Lookups are done by the singular form only.
+		// This doesn't change the sort order, which is that of the NUL-terminated strings already.
+		for (uint32_t i = 0; i < numberOfStrings; i++)
+		{
+			const size_t pluralSeparatorPos = sortedOrigStringsArray[i].find('\0');
+			if (pluralSeparatorPos != string::npos)
+			{
+				sortedOrigStringsArray[i].resize(pluralSeparatorPos);
+			}
+		}
+
 		string* translatedStringsArray = NULL;
 		ArrayGurard<string> translatedStringsArrayGuard(translatedStringsArray);
 		translatedStringsArray = new string[numberOfStrings];
@@ -273,24 +285,38 @@ const char* dgettext(const char* domain, const char* origStr)
 
 const char* ngettext(const char* origStr, const char* origStrPlural, unsigned long n)
 {
-	if (n == 1)
-	{
-		return gettext(origStr);
-	}
-	else
-	{
-		return gettext(origStrPlural);
-	}
+	return dngettext(NULL, origStr, origStrPlural, n);
 }
 
 const char* dngettext(const char* domain, const char* origStr, const char* origStrPlural, unsigned long n)
 {
-	if (n == 1)
+	if (!origStr || !origStrPlural)
 	{
-		return dgettext(domain, origStr);
+		return NULL;
 	}
-	else
+
+	if (!domain)
 	{
-		return dgettext(domain, origStrPlural);
+		domain = currentDefaultDomain;
 	}
+
+	if (domain)
+	{
+		for (map<char*, MessageCatalog*>::iterator i = loadedMessageCatalogPtrsByDomain.begin();
+				i != loadedMessageCatalogPtrsByDomain.end();
+				i++)
+		{
+			if (strcmp(i->first, domain) == 0)
+			{
+				const char* translatedStr = i->second->getTranslatedPluralStrPtr(origStr, n);
+				if (translatedStr)
+				{
+					return translatedStr;
+				}
+				break;
+			}
+		}
+	}
+
+	return n == 1 ? origStr : origStrPlural;
 }

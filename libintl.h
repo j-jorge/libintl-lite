@@ -107,8 +107,9 @@ LIBINTL_LITE_API const char* dgettext(const char* domain, const char* origStr);
 /**
  * Works like the gettext() function, but distinguishes between singular
  * and plural form of a message.
- * Always returns the suitable singular string, if n == 1, and the plural string
- * otherwise, regardless of the language.
+ * The plural form of the translation is selected according to the "Plural-Forms"
+ * header of the message catalog. If there is no translation, origStr is returned
+ * if n == 1, and origStrPlural otherwise.
  */
 LIBINTL_LITE_API const char* ngettext(const char* origStr, const char* origStrPlural, unsigned long n);
 

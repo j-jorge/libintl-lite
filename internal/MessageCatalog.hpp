@@ -30,6 +30,10 @@ DEALINGS IN THE SOFTWARE.
 #include <algorithm>
 #include <string>
 
+#include <string.h>
+
+#include "PluralExpression.hpp"
+
 namespace libintllite
 {
 
@@ -45,6 +49,31 @@ private:
 	uint32_t numberOfStrings;
 	const std::string* sortedOrigStringsArray;
 	const std::string* translatedStringsArray;
+	PluralExpression pluralExpression;
+
+	// Reads the plural form selection rule from the "Plural-Forms" entry of the catalog header,
+	// which is the translation of the empty string, e.g. "nplurals=2; plural=(n != 1);".
+	void loadPluralExpression()
+	{
+		const std::string* header = getTranslatedStrPtr(std::string());
+		if (!header)
+		{
+			return;
+		}
+		const size_t pluralFormsPos = header->find("Plural-Forms:");
+		if (pluralFormsPos == std::string::npos)
+		{
+			return;
+		}
+		const size_t lineEndPos = header->find('\n', pluralFormsPos);
+		const std::string pluralForms = header->substr(pluralFormsPos, lineEndPos == std::string::npos ? std::string::npos : lineEndPos - pluralFormsPos);
+		const size_t expressionPos = pluralForms.find("plural=");
+		if (expressionPos == std::string::npos)
+		{
+			return;
+		}
+		this->pluralExpression.parse(pluralForms.c_str() + expressionPos + strlen("plural="));
+	}
 
 public:
 	// The ownership of these arrays is transfered to the created message
@@ -57,6 +86,7 @@ public:
 					sortedOrigStringsArray(sortedOrigStringsArray),
 					translatedStringsArray(translatedStringsArray)
 	{
+		loadPluralExpression();
 	}
 
 	~MessageCatalog()
@@ -83,6 +113,34 @@ public:
 		{
 			return &this->translatedStringsArray[origStrPtr - this->sortedOrigStringsArray];
 		}
+	}
+
+	// Returns the translated plural form for n, or NULL if the original string was
+	// not found or has no translation for the plural form needed for n.
+	// orig is the singular original string.
+	// Does not throw exceptions!
+	const char* getTranslatedPluralStrPtr(const std::string& orig, unsigned long n) const
+	{
+		const std::string* translatedStrPtr = getTranslatedStrPtr(orig);
+		if (!translatedStrPtr)
+		{
+			return NULL;
+		}
+
+		// the plural forms are separated by NUL characters
+		unsigned long pluralFormIndex = this->pluralExpression.evaluate(n);
+		size_t pluralFormPos = 0;
+		while (pluralFormIndex > 0)
+		{
+			pluralFormPos = translatedStrPtr->find('\0', pluralFormPos);
+			if (pluralFormPos == std::string::npos)
+			{
+				return NULL;
+			}
+			++pluralFormPos;
+			--pluralFormIndex;
+		}
+		return translatedStrPtr->c_str() + pluralFormPos;
 	}
 };
 
